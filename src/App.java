@@ -1,15 +1,15 @@
 package sales_project;
 
 import javax.swing.JOptionPane;
-import java.io.IOException;
+
 import java.util.Scanner; // Needed for the Scanner class
 import java.io.*;         // Needed for the File class
 
 public class App {
   public static void main(String[] args) {
     String fileName = getFileName();
-    double totalSales = getTotalSales(fileName);
-    displayTotalSales(totalSales);
+    // displayTotalSales(totalSales);
+    displayStats(fileName);
     System.exit(0);
   }
 
@@ -49,4 +49,96 @@ public class App {
   public static void displayTotalSales(double totalSales) {
     JOptionPane.showMessageDialog(null, "The total sales is: " + totalSales);
   }
+
+  /**
+   * Displays all stats
+   */
+  public static void displayStats(String fileName) {
+    double total = getTotalSales(fileName);
+    double lowest = getLowest(fileName);
+    double highest = getHighest(fileName);
+    double average = getAverage(fileName);
+    String message = "Total Sales: " + total + "\n" +
+                     "Lowest Sales: " + lowest + "\n" +
+                     "Highest Sales: " + highest + "\n" +
+                     "Average Sales: " + average + "\n";
+    JOptionPane.showMessageDialog(null, message);
+  }
+
+  // Get the lowest sales from the file
+  public static double getLowest(String fileName) {
+    // create variables
+    double sales, lowest = 0;
+    try {
+      // open the file
+      File file = new File(fileName);
+      Scanner fileReader = new Scanner(file);
+      // read the first sale
+      lowest = fileReader.nextDouble();
+      // loop through the entire file
+      // starting from the second line
+      while(fileReader.hasNext()) {
+        sales = fileReader.nextDouble();
+        if(sales < lowest) {
+          lowest = sales;
+        }
+      }
+      fileReader.close();
+    }
+    catch (IOException ex) {
+      JOptionPane.showMessageDialog(null, "Something went wrong");
+    }
+    return lowest;
+  }
+
+  // Get the highest sales from the file
+  public static double getHighest(String fileName) {
+    // create variables
+    double sales, highest = 0;
+    try {
+      // open the file
+      File file = new File(fileName);
+      Scanner fileReader = new Scanner(file);
+      // read the first sale
+      highest = fileReader.nextDouble();
+      // loop through the entire file
+      // starting from the second line
+      while(fileReader.hasNext()) {
+        sales = fileReader.nextDouble();
+        if(sales > highest) {
+          highest = sales;
+        }
+      }
+      fileReader.close();
+    }
+    catch (IOException ex) {
+      JOptionPane.showMessageDialog(null, "Something went wrong");
+    }
+    return highest;
+  }
+
+
+  // Get the average sales from the file
+  public static double getAverage(String fileName) {
+    // create variables
+    double sales, total = 0, count = 0, average = 0;
+    try {
+      // open the file
+      File file = new File(fileName);
+      Scanner fileReader = new Scanner(file);
+      // loop through the entire file
+      while(fileReader.hasNext()) {
+        sales = fileReader.nextDouble();
+        total += sales;
+        count++;
+      }
+      fileReader.close();
+    }
+    catch (IOException ex) {
+      JOptionPane.showMessageDialog(null, "Something went wrong");
+    }
+    average = total / count;
+    return average;
+  }
+
 }
